@@ -1,0 +1,31 @@
+{
+  "name": "breezy-profil-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/El-Pouleto-ultimate/breezy-profil-service.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/El-Pouleto-ultimate/breezy-profil-service/issues"
+  },
+  "homepage": "https://github.com/El-Pouleto-ultimate/breezy-profil-service#readme",
+  "dependencies": {
+    "axios": "^1.18.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongoose": "^9.7.0",
+    "morgan": "^1.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
