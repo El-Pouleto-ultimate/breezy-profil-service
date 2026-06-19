@@ -7,7 +7,7 @@ Service gérant les profils publics des utilisateurs et les notifications.
 - MongoDB
 - Créer un fichier `.env` basé sur `.env.example`
 
-## API Routes (Port par défaut : 4001)
+## API Routes (Port par défaut : 3004)
 
 ### Profils
 - `GET /api/profiles/:userId` : Récupère le profil d'un utilisateur.

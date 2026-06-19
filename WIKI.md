@@ -36,9 +36,10 @@ C'est le schéma qui définit à quoi ressemble un profil public dans notre base
 
 ### `notification.model.js` (Fonctionnalité Bonus)
 Permet de tracer les évènements (quelqu'un vous a suivi, quelqu'un a liké votre post).
-- `user_id` : La personne qui doit recevoir la notification.
-- `actor_id` : La personne qui a déclenché l'évènement.
-- `type` : Le type d'évènement (ex: 'LIKE', 'FOLLOW', 'MENTION').
+- `recipient_user_id` : La personne qui doit recevoir la notification.
+- `from_user_id` et `from_username` : L'utilisateur qui a déclenché l'évènement.
+- `post_id` : L'identifiant du post concerné (optionnel, par défaut `null`).
+- `type` : Le type d'évènement ('like', 'follow', 'mention', 'comment', 'reply').
 - `is_read` : Un booléen (vrai/faux) pour savoir si la notification a été vue, avec `default: false`.
 
 ---
