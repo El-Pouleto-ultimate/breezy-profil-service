@@ -2,16 +2,22 @@ const Profile = require('../models/profile.model');
 
 // ─── GET /profiles/:userId ────────────────────────────────────
 exports.getProfile = async (req, res) => {
+  try {
     const profile = await Profile.findOneAndUpdate(
         { user_id: req.params.userId },
         { $setOnInsert: { user_id: req.params.userId } },
         { upsert: true, new: true }
     );
     return res.json(profile);
+  } catch (err) {
+    console.error('[Profil] getProfile error:', err);
+    return res.status(500).json({ error: { code: 'INTERNAL_ERROR', message: 'Erreur serveur.' } });
+  }
 };
 
 // ─── PUT /profiles/:userId ────────────────────────────────────
 exports.updateProfile = async (req, res) => {
+  try {
     const userId = req.headers['x-user-id'];
 
     if (userId !== req.params.userId) {
@@ -32,4 +38,8 @@ exports.updateProfile = async (req, res) => {
         { upsert: true, new: true }
     );
     return res.json(profile);
+  } catch (err) {
+    console.error('[Profil] updateProfile error:', err);
+    return res.status(500).json({ error: { code: 'INTERNAL_ERROR', message: 'Erreur serveur.' } });
+  }
 };

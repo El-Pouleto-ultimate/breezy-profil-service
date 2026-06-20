@@ -10,4 +10,5 @@ connectDB().then(() => {
     });
 }).catch(err => {
     console.error('[Profil Service] Erreur fatale de connexion DB:', err);
+    process.exit(1);
 });
