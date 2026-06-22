@@ -24,7 +24,7 @@ exports.updateProfile = async (req, res) => {
         return res.status(403).json({ error: { code: 'FORBIDDEN' } });
     }
 
-    const allowedFields = ['display_name', 'bio', 'avatar_url', 'banner_url'];
+    const allowedFields = ['display_name', 'bio', 'avatar_url', 'banner_url', 'location'];
     const updates = {};
     allowedFields.forEach(f => { if (req.body[f] !== undefined) updates[f] = req.body[f]; });
 

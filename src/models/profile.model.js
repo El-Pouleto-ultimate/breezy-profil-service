@@ -6,6 +6,7 @@ const profileSchema = new mongoose.Schema({
     bio: { type: String, maxlength: 160, default: '' },
     avatar_url: { type: String, default: '' },
     banner_url: { type: String, default: '' },
+    location: { type: String, maxlength: 100, default: '' },
 }, {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 });

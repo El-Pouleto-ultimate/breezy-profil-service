@@ -3,10 +3,10 @@ const profileCtrl = require('../controllers/profile.controller');
 const notificationCtrl = require('../controllers/notification.controller');
 
 // Profils
-router.get('/profiles/:userId', profileCtrl.getProfile);
-router.put('/profiles/:userId', profileCtrl.updateProfile);
+router.get('/profils/:userId', profileCtrl.getProfile);
+router.put('/profils/:userId', profileCtrl.updateProfile);
 
-// Notifications
+// Notifications (accédées via gateway /api/notifications → profil-service /api/notifications/*)
 router.get('/notifications', notificationCtrl.getNotifications);
 router.put('/notifications/read-all', notificationCtrl.markAllAsRead);
 router.put('/notifications/:id/read', notificationCtrl.markAsRead);
