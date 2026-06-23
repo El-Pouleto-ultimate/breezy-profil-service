@@ -62,9 +62,15 @@ exports.createNotification = async (req, res) => {
     if (req.headers['x-internal-secret'] !== process.env.INTERNAL_SECRET) {
         return res.status(401).json({ error: { code: 'UNAUTHORIZED' } });
     }
-    const { recipient_user_id, type, from_user_id, from_username, post_id } = req.body;
+    const { recipient_user_id, type, from_user_id, from_username, post_id, recipient_role } = req.body;
 
     if (recipient_user_id === from_user_id) return res.status(204).send();
+
+    // Respect de la matrice des permissions officielle :
+    // Les modérateurs et admins ne reçoivent PAS les notifications de like (Fx15) ni de follow (Fx16)
+    if ((type === 'like' || type === 'follow') && recipient_role && (recipient_role === 'moderator' || recipient_role === 'admin')) {
+        return res.status(204).send();
+    }
 
     const notif = await Notification.create({ recipient_user_id, type, from_user_id, from_username, post_id });
     return res.status(201).json(notif);
