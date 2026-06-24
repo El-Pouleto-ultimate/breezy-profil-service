@@ -1,4 +1,5 @@
 const Notification = require('../models/notification.model');
+const axios = require('axios');
 
 // ─── GET /notifications ───────────────────────────────────────
 exports.getNotifications = async (req, res) => {
@@ -62,14 +63,30 @@ exports.createNotification = async (req, res) => {
     if (req.headers['x-internal-secret'] !== process.env.INTERNAL_SECRET) {
         return res.status(401).json({ error: { code: 'UNAUTHORIZED' } });
     }
-    const { recipient_user_id, type, from_user_id, from_username, post_id, recipient_role } = req.body;
+    const { recipient_user_id, type, from_user_id, from_username, post_id } = req.body;
 
     if (recipient_user_id === from_user_id) return res.status(204).send();
 
-    // Respect de la matrice des permissions officielle :
-    // Les modérateurs et admins ne reçoivent PAS les notifications de like (Fx15) ni de follow (Fx16)
-    if ((type === 'like' || type === 'follow') && recipient_role && (recipient_role === 'moderator' || recipient_role === 'admin')) {
-        return res.status(204).send();
+    // Pour like et follow, vérifier le vrai rôle du destinataire depuis l'auth-service
+    // (source de vérité) — les modérateurs et admins ne reçoivent pas ces notifications (Fx15, Fx16)
+    if (type === 'like' || type === 'follow') {
+        try {
+            const roleResp = await axios.get(
+                `${process.env.AUTH_SERVICE_URL}/auth/internal/users/${recipient_user_id}/role`,
+                { headers: { 'x-internal-secret': process.env.INTERNAL_SECRET }, timeout: 2000 }
+            );
+            const realRole = roleResp.data?.role;
+            if (realRole === 'moderator' || realRole === 'admin') {
+                return res.status(204).send();
+            }
+        } catch (e) {
+            // Si auth-service est indisponible, on bloque par sécurité
+            // uniquement si le rôle passé par l'appelant indique admin/moderator
+            const fallbackRole = req.body.recipient_role;
+            if (fallbackRole === 'moderator' || fallbackRole === 'admin') {
+                return res.status(204).send();
+            }
+        }
     }
 
     const notif = await Notification.create({ recipient_user_id, type, from_user_id, from_username, post_id });
