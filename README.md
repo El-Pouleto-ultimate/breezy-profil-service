@@ -1,22 +1,40 @@
-# Breezy Profil Service
+# Breezy: profil service
 
-Service gérant les profils publics des utilisateurs et les notifications.
+Public profiles and notifications for [Breezy](https://github.com/El-Pouleto-ultimate/breezy-infra), a
+Twitter-like social network built as microservices. A profile holds a bio of up to 160 characters, an avatar, a
+banner and a location, and is created automatically the first time it is read. Notifications cover likes,
+follows, mentions, comments and replies; the other services create them through an internal endpoint.
 
-## Prérequis
-- Node.js
-- MongoDB
-- Créer un fichier `.env` basé sur `.env.example`
+Team project at CESI École d'Ingénieurs (distributed applications, June 2026).
 
-## API Routes (Port par défaut : 3004)
+Stack: Node.js 20, Express 5, Mongoose 9 on MongoDB, axios.
 
-### Profils
-- `GET /api/profiles/:userId` : Récupère le profil d'un utilisateur.
-- `PUT /api/profiles/:userId` : Met à jour un profil.
-  - Header requis : `x-user-id` (doit correspondre au `userId`).
-  - Body optionnel : `display_name`, `bio` (max 160 char), `avatar_url`, `banner_url`.
+## API
 
-### Notifications
-- `GET /api/notifications` : Récupère les notifications de l'utilisateur (Header `x-user-id` requis).
-- `PUT /api/notifications/read-all` : Marque toutes les notifications comme lues.
-- `PUT /api/notifications/:id/read` : Marque une notification spécifique comme lue.
-- `POST /api/notifications/internal` : (Usage interne) Créer une notification.
+| Method | Path | Access |
+|---|---|---|
+| GET | `/api/profils/:userId` | public |
+| PUT | `/api/profils/:userId` | own profile only |
+| GET | `/api/notifications` | signed in |
+| PUT | `/api/notifications/read-all` | signed in |
+| PUT | `/api/notifications/:id/read` | signed in |
+| POST | `/api/notifications/internal` | internal |
+
+"Signed in" routes read the `x-user-id` header that the gateway sets once it has checked the JWT. The internal
+route requires the `x-internal-secret` header shared by the services.
+
+## Configuration
+
+Copy `.env.example` to `.env`. Variables: `PORT`, `MONGO_URI`, `AUTH_SERVICE_URL`, `INTERNAL_SECRET`,
+`CORS_ORIGIN`.
+
+## Run
+
+The whole stack runs with Docker Compose from [breezy-infra](https://github.com/El-Pouleto-ultimate/breezy-infra).
+On its own: `npm install`, then `npm run dev` or `npm start`. There are no automated tests yet.
+[WIKI.md](WIKI.md), in French, walks through the code: architecture, entry point, models and controllers.
+
+## Team
+
+[Estebge](https://github.com/Estebge), [haguetm](https://github.com/haguetm),
+[Jessica14112005](https://github.com/Jessica14112005), [Tuture57](https://github.com/Tuture57).
